@@ -1,26 +1,40 @@
 import React from "react";
 import {Form} from "react-bootstrap";
-
-
-// function Home(){
-//     return(
-//         <div className="penis">peenis</div>
-//     );
-// }
+import "./home.styles.css"
+import PokeEntry from '../../components/pokeEntry.component.jsx'
 
 class Home extends React.Component{
     constructor(){
         super();
         this.state={
-            text: "words",
-            length: 5
-            
+            pikachu: [],
+            search: ''
         }
     }
+    componentDidMount(){
+        fetch('https://pokeapi.co/api/v2/pokemon/pikachu/')
+        .then(response => response.json())
+        .then(data => this.setState(
+        {
+            pikachu: data
+        }
+        )
+        )
+    }
+
+    handleChange = (e) => {
+        this.setState({search: e.target.value})
+    }
     render(){
+        const {pikachu, search} = this.state;
         return(
-            <div className="penis">{`${this.state.text} ${this.state.length}`}
-            <Form.Control type="text" placeholder="Normal text" />
+            <div className="background"><h1 className="title">PikaPie</h1>
+                <Form.Control type="search" value={search} onChange={this.handleChange} placeholder="Normal text" />
+                <PokeEntry title={pikachu.name} image={pikachu.sprites ? pikachu.sprites.front_default: ""}>
+                {pikachu.abilities ? pikachu.abilities.map(obj => <p>{obj.ability.name}</p>) : ''}
+                         
+                </PokeEntry>
+                <div></div>
             </div>
         );
     }
